@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fff0f5" />
+  <title>A Little Love Test ♡</title>
+  <style>
+    :root{
+      --pink:#f4a2b8; --hot:#c84e70; --deep:#6e3048; --cream:#fff8fa;
+      --line:#f2c5d1; --soft:#ffe3eb; --text:#573747;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; color:var(--text);
+      font-family: "Trebuchet MS", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 12% 18%, #fff 0 4px, transparent 5px),
+        radial-gradient(circle at 85% 30%, #ffd9e4 0 5px, transparent 6px),
+        linear-gradient(135deg,#fff8fb,#ffe8ef 55%,#fff4f7);
+      background-size:90px 90px,120px 120px,auto;
+      overflow-x:hidden;
+    }
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .page{display:none; min-height:100vh; padding:26px 16px 42px; align-items:center; justify-content:center}
+    .page.active{display:flex}
+    .card{
+      width:min(100%,720px); position:relative; padding:clamp(22px,5vw,44px);
+      border:2px solid #f4c4d1; border-radius:30px; background:rgba(255,255,255,.83);
+      box-shadow:0 18px 50px rgba(163,75,105,.13); text-align:center;
+    }
+    .eyebrow{font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:#b76a83; font-weight:800}
+    h1{font-size:clamp(2rem,7vw,3.5rem); line-height:1.06; color:var(--hot); margin:12px 0}
+    h2{font-size:clamp(1.55rem,5vw,2.35rem); color:var(--hot); margin:10px 0}
+    p{line-height:1.65}
+    .subtitle{max-width:480px;margin:10px auto 22px;color:#805568}
+    .btn{
+      border:0; border-radius:999px; padding:14px 24px; font-weight:800;
+      color:white; background:linear-gradient(135deg,#e982a0,#c84e70);
+      box-shadow:0 8px 18px rgba(200,78,112,.22); transition:transform .18s,filter .18s;
+    }
+    .btn:hover{transform:translateY(-2px);filter:saturate(1.1)}
+    .btn.secondary{color:#a64b69;background:#fff0f5;border:1px solid #f2bfd0;box-shadow:none}
+    .tiny{font-size:.85rem;color:#a77b8d}
+    .flower{font-size:clamp(4.4rem,17vw,8rem); filter:drop-shadow(0 8px 5px #e9a5b866); animation:float 3s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+    .decor{position:absolute;font-size:1.5rem;opacity:.65;pointer-events:none}
+    .d1{top:18px;left:20px}.d2{top:35px;right:25px}.d3{bottom:24px;left:30px}.d4{bottom:28px;right:25px}
+    .question{font-size:1.2rem;font-weight:800;margin:22px 0 14px}
+    .answers{display:grid;gap:10px;max-width:480px;margin:0 auto}
+    .answer{
+      padding:13px 16px;border:1.5px solid var(--line);border-radius:17px;background:#fff9fb;color:var(--text);
+      text-align:left;font-weight:700;transition:.15s;
+    }
+    .answer:hover,.answer.selected{background:#ffe4ec;border-color:#d86d8c;transform:translateY(-1px)}
+    .progress{height:7px;border-radius:9px;background:#f8dbe4;overflow:hidden;margin:0 auto 20px;max-width:480px}
+    .progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#f4a2b8,#c84e70);transition:width .3s}
+    .meter-wrap{max-width:430px;margin:25px auto 14px}
+    .gauge{width:min(100%,390px);height:auto;display:block;margin:auto;overflow:visible}
+    .score{font-size:clamp(2.5rem,10vw,4rem);font-weight:900;color:var(--hot);margin:4px 0}
+    .slider{width:100%;accent-color:#c84e70;margin:18px 0}
+    .range-labels{display:flex;justify-content:space-between;font-size:.8rem;color:#a77b8d}
+    .reaction{font-size:4rem;min-height:75px;margin-top:8px}
+    .bouquet{font-size:clamp(5rem,20vw,9rem);line-height:1.2;animation:float 3s infinite}
+    .letter{white-space:pre-line;text-align:left;max-width:520px;margin:18px auto;padding:20px;border:1px dashed #e9a2b8;border-radius:18px;background:#fff7fa;line-height:1.8}
+    .field{display:block;text-align:left;font-size:.9rem;font-weight:800;color:#9b4d69;margin:12px auto 5px;max-width:440px}
+    .text-input{width:100%;max-width:440px;padding:12px 14px;border:1.5px solid var(--line);border-radius:13px;background:#fffafd;color:var(--text);outline:none}
+    .text-input:focus{border-color:#c84e70}
+    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+    .footer{margin-top:25px;font-size:.75rem;color:#b18a99}
+    .toast{min-height:24px;color:#b94e70;font-weight:800;font-size:.9rem;margin-top:8px}
+    @media(max-width:420px){.card{border-radius:23px}.page{padding:15px 10px 25px}.decor{font-size:1.1rem}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="page active" id="welcome">
+      <div class="card">
+        <span class="decor d1">♡</span><span class="decor d2">✿</span><span class="decor d3">♡</span><span class="decor d4">✧</span>
+        <div class="eyebrow">a tiny website made with love</div>
+        <div class="flower" aria-hidden="true">💐</div>
+        <h1>A Little Love Test</h1>
+        <p class="subtitle">A few cute questions, one very important meter, and a little surprise waiting at the end.</p>
+        <label class="field" for="senderName">Your name (optional)</label>
+        <input class="text-input" id="senderName" maxlength="30" placeholder="Your name…" />
+        <label class="field" for="theirName">Made especially for</label>
+        <input class="text-input" id="theirName" maxlength="30" placeholder="Their name…" />
+        <div class="actions"><button class="btn" id="startBtn">Start the love test ♡</button></div>
+        <p class="tiny">No pressure. Just smiles, sweetness, and a surprise.</p>
+      </div>
+    </section>
+
+    <section class="page" id="quiz">
+      <div class="card">
+        <span class="decor d1">♡</span><span class="decor d2">✿</span>
+        <div class="eyebrow">question <span id="qNum">1</span> of 4</div>
+        <h2 id="quizTitle">Let's see what's in your heart</h2>
+        <div class="progress"><span id="progressBar"></span></div>
+        <div class="question" id="questionText"></div>
+        <div class="answers" id="answers"></div>
+        <div class="toast" id="quizToast"></div>
+        <div class="actions">
+          <button class="btn secondary" id="backBtn">Back</button>
+          <button class="btn" id="nextBtn">Next ♡</button>
+        </div>
+        <div class="footer">every answer is valid — this is just for fun ✧</div>
+      </div>
+    </section>
+
+    <section class="page" id="meterPage">
+      <div class="card">
+        <span class="decor d1">♡</span><span class="decor d2">✧</span>
+        <div class="eyebrow">the very scientific love meter</div>
+        <h2 id="meterTitle">How much love are we talking?</h2>
+        <div class="reaction" id="reaction" aria-live="polite">🐱</div>
+        <div id="reactionText">Move the slider to reveal your result!</div>
+        <div class="score" id="score">79%</div>
+        <div class="meter-wrap">
+          <svg class="gauge" viewBox="0 0 320 190" role="img" aria-label="Animated love meter">
+            <path d="M 48 155 A 112 112 0 0 1 272 155" fill="none" stroke="#f7dbe3" stroke-width="35" stroke-linecap="round"/>
+            <path d="M 48 155 A 112 112 0 0 1 272 155" fill="none" stroke="#d86d8c" stroke-width="35" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="0" id="gaugeArc"/>
+            <path d="M 160 155 L 160 63" stroke="#7d354f" stroke-width="5" stroke-linecap="round" id="needle" transform="rotate(0 160 155)"/>
+            <circle cx="160" cy="155" r="10" fill="#7d354f"/><text x="160" y="139" text-anchor="middle" font-size="23" fill="#8f4a63" font-family="cursive">love</text>
+            <text x="35" y="183" font-size="11" fill="#b77a8f">a little</text><text x="248" y="183" font-size="11" fill="#b77a8f">SO MUCH</text>
+          </svg>
+        </div>
+        <input class="slider" type="range" id="loveSlider" min="0" max="100" value="79" aria-label="Love meter slider"/>
+        <div class="range-labels"><span>just a little</span><span>infinite love ♡</span></div>
+        <div class="actions"><button class="btn secondary" id="retakeBtn">Try again</button><button class="btn" id="surpriseBtn">Open my surprise 🎁</button></div>
+        <p class="tiny">The score is playful, not a real measure of anyone's feelings.</p>
+      </div>
+    </section>
+
+    <section class="page" id="surprise">
+      <div class="card">
+        <span class="decor d1">♡</span><span class="decor d2">✿</span><span class="decor d3">♡</span>
+        <div class="eyebrow">surprise unlocked</div>
+        <h1 id="surpriseTitle">You passed the love test!</h1>
+        <p class="subtitle" id="surpriseSubtitle">Your surprise is waiting for you.</p>
+        <div class="bouquet" aria-hidden="true">💐</div>
+        <h2>A bouquet just for you</h2>
+        <p class="subtitle">A little reminder that someone thinks you're pretty special.</p>
+        <div class="letter" id="letterText">Dear you,\n\nIf I could give you one thing, it would be the ability to see yourself through my eyes. Then you'd know how lovely, important, and one-of-a-kind you are.\n\nHere's a tiny digital bouquet, just to make you smile. ♡</div>
+        <div class="actions">
+          <button class="btn" id="confettiBtn">Send some hearts 💗</button>
+          <button class="btn secondary" id="editLetterBtn">Personalize letter</button>
+          <button class="btn secondary" id="restartBtn">Start over</button>
+        </div>
+        <div class="toast" id="surpriseToast"></div>
+        <div class="footer">made with a little HTML, a little CSS, and a lot of heart ♡</div>
+      </div>
+    </section>
+  </main>
+  <div id="floatingHearts" aria-hidden="true"></div>
+  <script>
+    const questions = [
+      {q:"What's your favourite kind of surprise?", a:["A sweet little message 💌","Flowers for no reason 💐","A whole day together ☁️","Anything, as long as it's thoughtful ♡"]},
+      {q:"Pick a perfect little moment:", a:["Laughing at silly things 😂","A peaceful walk together 🌷","Late-night conversations 🌙","Sharing snacks and music 🎧"]},
+      {q:"How often should someone remind you you're special?", a:["Every once in a while","Whenever they think of me","At least once a day ♡","Every single chance they get!"]},
+      {q:"Choose a tiny symbol for this page:", a:["♡ Heart","🌸 Flower","⭐ Star","🎀 Ribbon"]}
+    ];
+    let current = 0, chosen = Array(questions.length).fill(null);
+    const $ = id => document.getElementById(id);
+    const pages = ["welcome","quiz","meterPage","surprise"];
+    function showPage(id){ pages.forEach(p => $(p).classList.toggle("active",p===id)); window.scrollTo({top:0,behavior:"smooth"}); }
+    function safeName(v){return (v||"").trim().slice(0,30)}
+    function renderQuestion(){
+      const item=questions[current];
+      $("qNum").textContent=current+1;
+      $("questionText").textContent=item.q;
+      $("progressBar").style.width=((current+1)/questions.length*100)+"%";
+      $("answers").innerHTML="";
+      $("quizToast").textContent="";
+      item.a.forEach((answer,i)=>{
+        const b=document.createElement("button");
+        b.className="answer"+(chosen[current]===i?" selected":"");
+        b.textContent=answer;
+        b.setAttribute("aria-pressed",chosen[current]===i?"true":"false");
+        b.addEventListener("click",()=>{chosen[current]=i;renderQuestion();});
+        $("answers").appendChild(b);
+      });
+      $("backBtn").style.visibility=current===0?"hidden":"visible";
+      $("nextBtn").textContent=current===questions.length-1?"Show my result ♡":"Next ♡";
+    }
+    function goNext(){
+      if(chosen[current]===null){$("quizToast").textContent="Pick whichever answer feels right first ♡";return;}
+      if(current<questions.length-1){current++;renderQuestion();}
+      else {showPage("meterPage");updateMeter(Number($("loveSlider").value));}
+    }
+    function updateMeter(value){
+      $("score").textContent=value+"%";
+      const angle=-90+(value/100)*180;
+      $("needle").setAttribute("transform",`rotate(${angle} 160 155)`);
+      const arc=$("gaugeArc"); arc.style.strokeDasharray="352"; arc.style.strokeDashoffset=352-(value/100)*352;
+      let face,msg;
+      if(value<25){face="🥺";msg="Only that much? The little kitty is waiting for extra cuddles."}
+      else if(value<50){face="😿";msg="A tiny bit of love… let's add a few more heart-shaped moments."}
+      else if(value<75){face="🐱";msg="Aww, that's a lovely amount of love!"}
+      else if(value<100){face="🥰";msg="So much love! Someone's definitely smiling right now."}
+      else {face="😭💗";msg="INFINITE LOVE! The meter can't even handle it!"}
+      $("reaction").textContent=face;$("reactionText").textContent=msg;
+    }
+    $("startBtn").addEventListener("click",()=>{current=0;chosen=Array(questions.length).fill(null);renderQuestion();showPage("quiz");});
+    $("nextBtn").addEventListener("click",goNext);
+    $("backBtn").addEventListener("click",()=>{if(current>0){current--;renderQuestion();}});
+    $("loveSlider").addEventListener("input",e=>updateMeter(Number(e.target.value)));
+    $("retakeBtn").addEventListener("click",()=>{current=0;chosen=Array(questions.length).fill(null);renderQuestion();showPage("quiz");});
+    $("surpriseBtn").addEventListener("click",()=>{
+      const sender=safeName($("senderName").value), their=safeName($("theirName").value);
+      $("surpriseTitle").textContent=their?`You passed the love test, ${their}!`:"You passed the love test!";
+      $("surpriseSubtitle").textContent=their?`Your surprise is waiting for you, ${their}.`:"Your surprise is waiting for you.";
+      $("letterText").textContent=`Dear ${their||"you"},\n\n${sender?sender+" made this little page just for you.":"Someone made this little page just for you."} If I could give you one thing, it would be the ability to see yourself through my eyes. Then you'd know how lovely, important, and one-of-a-kind you are.\n\nHere's a tiny digital bouquet, just to make you smile. ♡`;
+      showPage("surprise");
+    });
+    $("restartBtn").addEventListener("click",()=>showPage("welcome"));
+    $("editLetterBtn").addEventListener("click",()=>{
+      const name=safeName($("theirName").value)||"you";
+      const custom=prompt("Write your own short love letter (keep it kind and sweet):",`Dear ${name},\n\nYou make ordinary days feel a little more special. This bouquet is a tiny reminder that you're appreciated. ♡`);
+      if(custom!==null && custom.trim())$("letterText").textContent=custom.trim();
+    });
+    $("confettiBtn").addEventListener("click",()=>{
+      const container=$("floatingHearts");container.innerHTML="";
+      const symbols=["💗","💖","💕","♡","🌸","✨"];
+      for(let i=0;i<24;i++){
+        const el=document.createElement("span");el.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+        Object.assign(el.style,{position:"fixed",left:Math.random()*100+"vw",top:"105vh",fontSize:(18+Math.random()*20)+"px",zIndex:99,pointerEvents:"none",transition:"transform 2.8s ease-out,opacity 2.8s"});
+        container.appendChild(el);
+        requestAnimationFrame(()=>{el.style.transform=`translateY(-${70+Math.random()*100}vh) rotate(${Math.random()*360}deg)`;el.style.opacity="0";});
+        setTimeout(()=>el.remove(),3000);
+      }
+      $("surpriseToast").textContent="A little shower of hearts, just for you! ♡";
+    });
+    updateMeter(79);
+  </script>
+</body>
+</html>
